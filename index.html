@@ -33,17 +33,15 @@
     <input type="number" id="withdrawAmount" placeholder="Withdraw Amount">
     <button onclick="withdraw()">Withdraw</button>
 
-    <!-- Hidden canvas for receipt generation -->
     <canvas id="receiptCanvas" width="400" height="200"></canvas>
-
-    <!-- Button to go to the Admin Panel -->
     <br>
-    <button onclick="window.location.href = 'https://ezjpq.github.io/Admin/';">Go to Admin Panel</button>
+    <button onclick="window.location.href = 'admin.html';">Go to Admin Panel</button>
 
     <script>
         let users = JSON.parse(localStorage.getItem('users')) || [];
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
+        // Assign new user if no current user exists
         if (!currentUser) {
             const username = `user${users.length + 1}`;
             currentUser = { username, balance: 100 };
@@ -83,7 +81,10 @@
             }
 
             currentUser.balance -= bet;
-            if (Math.random() < 1 / bet) {
+
+            // Adjust winning probability based on bet amount
+            const winProbability = Math.min(1, 1 / (0.5 * bet));
+            if (Math.random() < winProbability) {
                 const winnings = bet * 2;
                 currentUser.balance += winnings;
                 alert(`You won! You earned $${winnings.toFixed(2)}`);
@@ -109,8 +110,6 @@
             currentUser.balance -= withdrawAmount;
             saveUser();
             updateBalance();
-
-            // Generate receipt as an image
             generateReceipt(withdrawAmount);
         }
 
@@ -118,29 +117,23 @@
             const canvas = document.getElementById('receiptCanvas');
             const ctx = canvas.getContext('2d');
 
-            // Background
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Header
             ctx.fillStyle = '#000000';
             ctx.font = '20px Arial';
             ctx.fillText('Withdrawal Receipt', 120, 40);
 
-            // Date
             const date = new Date().toLocaleString();
             ctx.font = '16px Arial';
             ctx.fillText(`Date: ${date}`, 20, 80);
 
-            // Amount
             ctx.font = '30px Arial bold';
             ctx.fillText(`Amount: $${amount.toFixed(2)}`, 20, 120);
 
-            // Withdrawn by (User)
             ctx.font = '16px Arial';
             ctx.fillText(`Withdrawn by: ${currentUser.username}`, 20, 160);
 
-            // Generate image and trigger download
             const image = canvas.toDataURL('image/png');
             const link = document.createElement('a');
             link.href = image;
