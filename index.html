@@ -41,9 +41,10 @@
         let users = JSON.parse(localStorage.getItem('users')) || [];
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
-        // Assign new user if no current user exists
+        // Generate a new user with a random number if none exists
         if (!currentUser) {
-            const username = `user${users.length + 1}`;
+            const randomNumber = Math.floor(Math.random() * 1000) + 1; // Random number from 1 to 1000
+            const username = `user${randomNumber}`;
             currentUser = { username, balance: 100 };
             users.push(currentUser);
             localStorage.setItem('users', JSON.stringify(users));
@@ -82,9 +83,8 @@
 
             currentUser.balance -= bet;
 
-            // Adjust winning probability based on bet amount
-            const winProbability = Math.min(1, 1 / (0.5 * bet));
-            if (Math.random() < winProbability) {
+            // 50% chance of winning for every bet
+            if (Math.random() < 0.5) {
                 const winnings = bet * 2;
                 currentUser.balance += winnings;
                 alert(`You won! You earned $${winnings.toFixed(2)}`);
